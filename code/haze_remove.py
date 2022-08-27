@@ -2,10 +2,9 @@ import cv2 as cv
 import numpy as np
 from matplotlib import pyplot as plt
 
-# 取最小值图像并进行开运算处理
-
 
 def Min_Dark_Channel(img, size):
+    # 取最小值图像并进行开运算处理
     # 对输入图像每个像素点取RGB最小值
     b, g, r = cv.split(img)
     dc = cv.min(cv.min(r, g), b)
@@ -90,10 +89,9 @@ def Light_Channel(sec_img, dark, rate):
     A = np.array([sec_img[pos[0], pos[1], :]])
     return A
 
-# 估计透射率取值
-
 
 def Transmission_Estimate(img, A, size):
+    # 估计透射率取值
     omega = 0.95
     img_empty = np.empty(img.shape, img.dtype)
 
@@ -103,10 +101,9 @@ def Transmission_Estimate(img, A, size):
     transmission = 1 - omega*Min_Dark_Channel(img_empty, size)
     return transmission
 
-# 使用导向滤波优化透射率
-
 
 def Transmission_Refine(img, te):
+    # 使用导向滤波优化透射率
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     gray = np.float64(gray)/255
     r = 60
@@ -115,10 +112,9 @@ def Transmission_Refine(img, te):
 
     return t
 
-# 导向滤波
-
 
 def Guided_Filter(img, p, r, eps=1e-4):
+    # 导向滤波
     mean_I = cv.boxFilter(img, cv.CV_64F, (r, r))
     mean_p = cv.boxFilter(p, cv.CV_64F, (r, r))
     mean_Ip = cv.boxFilter(img*p, cv.CV_64F, (r, r))
